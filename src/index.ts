@@ -1,11 +1,13 @@
 import express from "express";
 import { validateEnv } from "./config/config.js";
 import { router } from "./router/route.js";
+import { errorHandler } from "./middleware/errorHandler.js";
 
 const app = express();
 app.use(express.json());
 
 app.use("/", router);
+app.use(errorHandler);
 
 app.listen(validateEnv().value.PORT, () => {
   console.log(
