@@ -11,10 +11,6 @@ export const checkUsersByUsername = async (username: string) => {
 export const addUsers = async (username: string, password: string) => {
   try {
     const hash = bcrypt.hashSync(password, 10);
-    const result = await checkUsersByUsername(username);
-    if (result.rowCount) {
-      throw new AppError("username already exist", 401);
-    }
 
     return await client.query(
       "INSERT INTO users (username,password) VALUES ($1,$2)",

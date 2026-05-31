@@ -3,12 +3,18 @@ import { upload } from "../config/multer.js";
 import { uploadFilesController } from "../controller/file.controller.js";
 import validateSchema from "../middleware/schemaValidation.js";
 import { authSchema } from "../schema/body.schema.js";
-import { registerController } from "../controller/auth.controller.js";
+import {
+  loginController,
+  refrehController,
+  registerController,
+} from "../controller/auth/auth.controller.js";
+import { verifAuth, verifRefreshToken } from "../middleware/auth.middleware.js";
 
 export const router = express.Router();
 
-router.get("/", (req, res) => {});
+router.post("/auth/register", validateSchema(authSchema), registerController);
+router.post("/auth/login", validateSchema(authSchema), loginController);
+router.post("/auth/refresh", verifRefreshToken, refrehController);
 
-router.post("/file", upload, uploadFilesController);
-router.post("/auth/register", validateSchema(authSchema), registerController);
-router.post("/auth/register", validateSchema(authSchema), registerController);
+router.post("/file/bow", upload, uploadFilesController);
+
