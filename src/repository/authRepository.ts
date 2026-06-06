@@ -7,7 +7,6 @@ export const addRefreshToken = async (
   const expired_at = new Date(
     Date.now() * 7 + 24 + 60 + 60 + 1000,
   ).toISOString();
-  console.log(expired_at);
   return await client.query(
     "INSERT INTO authentications (user_id,token,expires_at) VALUES ($1,$2,$3)",
     [user_id, refreshToken, expired_at],

@@ -1,11 +1,12 @@
 import { AppError } from "../error/appError.js";
 
-export const uploadFilesController = (req: any, res: any, next: any) => {
-  const files = req.files;
-  if (files) {
+export const bowController_secure = (req: any, res: any, next: any) => {
+  try {
+    const files = req.files;
     return res.status(200).json({
       file: files,
     });
+  } catch (error) {
+    return next(error);
   }
-  next(new AppError("failed to upload", 500));
 };

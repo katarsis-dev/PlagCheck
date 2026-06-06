@@ -8,7 +8,7 @@ const validateSchema = (schema: any) => (req: any, res: any, next: any) => {
   }
 
   req.body = value;
-  next();
+  return next();
 };
 
 export default validateSchema;

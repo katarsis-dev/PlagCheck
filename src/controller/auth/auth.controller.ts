@@ -38,11 +38,11 @@ export const loginController = async (req: any, res: any, next: any) => {
       token: result.accessToken,
     });
   } catch (err) {
-    next(err);
+    return next(err);
   }
 };
 
-export const refrehController = async (req: any, res: any, next: any) => {
+export const refreshController = async (req: any, res: any, next: any) => {
   try {
     const refreshToken = req.refreshToken;
     const isAvailable = await checkRefreshToken(refreshToken);
@@ -62,6 +62,6 @@ export const refrehController = async (req: any, res: any, next: any) => {
       throw new AppError("jwt token invalid", 401);
     }
   } catch (err) {
-    next(err);
+    return next(err);
   }
 };
