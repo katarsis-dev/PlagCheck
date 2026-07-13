@@ -45,3 +45,5 @@ htmlcov/
 
 # Uvicorn/FastAPI temporary files
 uvicorn.pid
+
+node_modules
