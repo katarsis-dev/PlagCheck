@@ -29,18 +29,30 @@ Karena tujuan saya saat ini **bukan membuat model dari nol**, melainkan:
 
 ---
 
-## 📦 Endpoint yang Disediakan (Progress)
+# Model Decision Note (16/07/2026)
 
-Saat ini service ini memiliki **satu endpoint utama** yang masih dalam proses penyempurnaan:
+## Current State
+IndoBERT (`indobenchmark/indobert`) → cosine similarity score buruk.
 
-### 🔹 `POST /compare`
+## Model Pengganti
+`intfloat/multilingual-e5-base`
 
-> **Rencana:**  
-> Menerima **dua teks** dalam body request, lalu mengembalikan skor kemiripan (0–1) berdasarkan cosine similarity dari embedding kedua teks.
+**Masalah:** distribusi skor sempit di range **0.7–1.0**, output mentah tidak intuitif dari sisi user.
 
-**Contoh request (nanti):**
-```json
-{
-  "text1": "Saya belajar backend dengan FastAPI",
-  "text2": "FastAPI digunakan untuk belajar backend"
-}
+## Opsi yang Dipertimbangkan
+
+| # | Opsi | Status |
+|---|------|--------|
+| 1 | Ganti model lain yang lebih sesuai use case | Open |
+| 2 | Fine-tune | ~~Dicoret~~ – tidak sejalan dengan roadmap backend/DevOps |
+| 3 | **Score framing** – rescale distribusi 0.7–1.0 ke range yang lebih readable sebelum di-serve | ✅ Dipilih |
+
+## Keputusan: Score Framing
+
+Skor mentah 0.7 pada dua teks yang secara semantik tidak mirip akan membingungkan user jika ditampilkan apa adanya → perlu normalisasi persepsi sebelum serving.
+
+> **Next step:** tentukan metode framing
+> - **Linear rescale** – min-max normalization dari range 0.7–1.0 ke 0.0–1.0
+> - **Threshold-based bucketing** – misal `< 0.82` = "tidak mirip", dst.
+>
+> Keduanya punya trade-off berbeda, perlu kalibrasi.
